@@ -8,9 +8,6 @@ android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
-    def localProperties = new Properties()
-    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
-
     defaultConfig {
         applicationId "com.sunrise.app"
         minSdkVersion 16
@@ -23,11 +20,15 @@ android {
 
     buildTypes {
         debug {
-            resValue("string", "google_maps_key", localProperties['GOOGLE_MAPS_API_KEY'])
-            buildConfigField 'String', "OPEN_WEATHER_MAP_API_KEY", localProperties['OPEN_WEATHER_MAP_API_KEY']
+            buildConfigField 'String', "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY
+            buildConfigField 'String', "OPEN_WEATHER_MAP_API_KEY", OPEN_WEATHER_MAP_API_KEY
+            resValue("string", "google_maps_key", GOOGLE_MAPS_API_KEY)
         }
         release {
             minifyEnabled false
+            buildConfigField 'String', "GOOGLE_MAPS_API_KEY", GOOGLE_MAPS_API_KEY
+            buildConfigField 'String', "OPEN_WEATHER_MAP_API_KEY", OPEN_WEATHER_MAP_API_KEY
+            resValue("string", "google_maps_key", GOOGLE_MAPS_API_KEY)
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

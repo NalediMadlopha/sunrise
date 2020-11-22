@@ -5,7 +5,7 @@
     <dimen name="default_large">24dp</dimen>
     <dimen name="default_extra_large">32dp</dimen>
 
-    <dimen name="appbar_height">280dp</dimen>
+    <dimen name="appbar_height">340dp</dimen>
     <dimen name="search_view_margin_top">44dp</dimen>
     <dimen name="elevation">5dp</dimen>
 
