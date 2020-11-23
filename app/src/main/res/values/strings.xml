@@ -3,4 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="search_hint">Search</string>
     <string name="unknown_location">Unknown location</string>
+    <string name="degrees">%d\u00B0</string>
+    <string name="min_max_feels_like">%1$d\u00B0/%2$d\u00B0 Feels like %3$d\u00B0</string>
+    <string name="min_max">%1$d\u00B0 / %2$d\u00B0</string>
 </resources>
