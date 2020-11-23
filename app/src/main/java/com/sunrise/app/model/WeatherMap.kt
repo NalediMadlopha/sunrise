@@ -1,10 +1,25 @@
 package com.sunrise.app.model
 
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "weather_map")
 data class WeatherMap(
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    val id: Int,
+    @ColumnInfo(name = "city")
     val city: City,
+    @ColumnInfo(name = "cnt")
     val cnt: Int,
+    @ColumnInfo(name = "cod")
     val cod: String,
+    @ColumnInfo(name = "list")
     val list: List<Forecast>,
+    @ColumnInfo(name = "message")
     val message: Double
 )
 
