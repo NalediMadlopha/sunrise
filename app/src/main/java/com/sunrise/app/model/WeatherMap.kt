@@ -1,9 +1,26 @@
 package com.sunrise.app.model
 
+data class WeatherMap(
+    val city: City,
+    val cnt: Int,
+    val cod: String,
+    val list: List<Forecast>,
+    val message: Double
+)
+
+data class City(
+    val coord: Coord,
+    val country: String,
+    val id: Int,
+    val name: String,
+    val population: Int,
+    val timezone: Int
+)
+
 data class Forecast(
     val clouds: Int,
-    val date: Int,
     val deg: Int,
+    val dt: Int,
     val feels_like: FeelsLike,
     val humidity: Int,
     val pop: Double,
@@ -14,6 +31,11 @@ data class Forecast(
     val sunset: Int,
     val temp: Temp,
     val weather: List<Weather>
+)
+
+data class Coord(
+    val lat: Double,
+    val lon: Double
 )
 
 data class FeelsLike(
