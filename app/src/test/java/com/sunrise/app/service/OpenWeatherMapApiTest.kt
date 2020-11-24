@@ -1,7 +1,6 @@
 package com.sunrise.app.service
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.any
 import com.sunrise.app.BuildConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -54,7 +53,7 @@ class OpenWeatherMapApiTest {
     fun `fetchWeather should return a null forecast list if the service returns an error response`() {
         enqueueResponse("error.json")
 
-        val response = service.fetchWeather(any(), any(), any(), any()).execute()
+        val response = service.fetchWeather(28.63, -26.36, "metric", 7).execute()
         mockWebServer.takeRequest()
 
         assertTrue(response.body()?.list.isNullOrEmpty())
