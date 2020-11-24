@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity(), Injectable, OnMapReadyCallback {
             this.googleMap = it
             it.setOnMapClickListener { latLng ->
                 viewModel.getAddress(latLng)?.let { address ->
-                    it.clear()
                     search_view.setQuery(
                         address.locality ?: address.adminArea ?: address.featureName, false
                     )
@@ -84,6 +83,7 @@ class MainActivity : AppCompatActivity(), Injectable, OnMapReadyCallback {
     }
 
     private fun pinLocation(address: Address) {
+        googleMap.clear()
         viewModel.fetchWeather(address.latitude, address.longitude)
         val latLng = LatLng(address.latitude, address.longitude)
         val locationName = address.locality ?: address.adminArea ?: address.featureName

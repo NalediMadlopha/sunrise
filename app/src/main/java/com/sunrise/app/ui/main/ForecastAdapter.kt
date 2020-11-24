@@ -1,5 +1,6 @@
 package com.sunrise.app.ui.main
 
+import android.graphics.drawable.Drawable
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
@@ -63,12 +64,8 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
 
         fun bind(forecast: Forecast, position: Int) {
             if (position == 0) {
-                val sharedPreferences = context.getSharedPreferences("SUNRISE_SHARED_PREFERENCES",
-                    AppCompatActivity.MODE_PRIVATE
-                )
-                val locationName = sharedPreferences.getString("location_name", "")
-
-                itemView.location_name_textview?.text = locationName
+                itemView.weather_icon.setImageDrawable(getWeatherArt(forecast.weather.first().main))
+                itemView.location_name_textview?.text = getLocationName()
                 itemView.date_textview?.text = context.getString(R.string.today)
                 itemView.temperature_textview?.text =
                     context.getString(R.string.degrees, forecast.temp.day.toInt())
@@ -80,6 +77,7 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
                     forecast.feels_like.day.toInt()
                 )
             } else {
+                itemView.weather_icon.setImageDrawable(getWeatherArt(forecast.weather.first().main))
                 itemView.date_textview?.text = getForecastDate()
                 itemView.min_max_textview?.text = context.getString(
                     R.string.min_max,
@@ -92,6 +90,37 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
                 itemView.description_textview.text = it.description.split(' ')
                     .joinToString(" ") { it.capitalize(Locale.getDefault()) }
             }
+        }
+
+        private fun getWeatherArt(weatherDescription: String): Drawable {
+            return when(weatherDescription) {
+                "Clear" -> {
+                    context.resources.getDrawable(R.mipmap.art_clear, null)
+                }
+                "Clouds" -> {
+                    context.resources.getDrawable(R.mipmap.art_clouds, null)
+                }
+                "Rain" -> {
+                    context.resources.getDrawable(R.mipmap.art_rain, null)
+                }
+                "Snow" -> {
+                    context.resources.getDrawable(R.mipmap.art_snow, null)
+                }
+                "Storm" -> {
+                    context.resources.getDrawable(R.mipmap.art_storm, null)
+                } else -> {
+                    context.resources.getDrawable(R.mipmap.art_clear, null)
+                }
+            }
+        }
+
+        private fun getLocationName(): String? {
+            val sharedPreferences = context.getSharedPreferences(
+                "SUNRISE_SHARED_PREFERENCES",
+                AppCompatActivity.MODE_PRIVATE
+            )
+            val locationName = sharedPreferences.getString("location_name", "")
+            return locationName
         }
 
         private fun getForecastDate(): String {
