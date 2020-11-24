@@ -4,6 +4,7 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.sunrise.app.R
 import com.sunrise.app.model.Forecast
@@ -13,6 +14,9 @@ import kotlinx.android.synthetic.main.forecast_list_item.view.min_max_textview
 import kotlinx.android.synthetic.main.forecast_list_item_today.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+
+private const val DD_MMM_YYYY_DATE_FORMAT = "dd MMMM yyyy"
+private const val DAY_OF_WEEK_EEEE_FORMAT = "EEEE"
 
 class ForecastAdapter(private var forecastList: List<Forecast>) :
     RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
@@ -30,8 +34,6 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
                     .let { ForecastViewHolder(it) }
             }
         }
-
-
     }
 
     override fun onBindViewHolder(holder: ForecastViewHolder, position: Int) {
@@ -61,7 +63,12 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
 
         fun bind(forecast: Forecast, position: Int) {
             if (position == 0) {
-                itemView.location_name_textview?.text = "Johannesburg"
+                val sharedPreferences = context.getSharedPreferences("SUNRISE_SHARED_PREFERENCES",
+                    AppCompatActivity.MODE_PRIVATE
+                )
+                val locationName = sharedPreferences.getString("location_name", "")
+
+                itemView.location_name_textview?.text = locationName
                 itemView.date_textview?.text = context.getString(R.string.today)
                 itemView.temperature_textview?.text =
                     context.getString(R.string.degrees, forecast.temp.day.toInt())
@@ -87,15 +94,13 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
             }
         }
 
-        private val DD_MMM_YYYY_DATE_FORMAT = "dd MMMM yyyy"
-
         private fun getForecastDate(): String {
             var date = Date()
             val calendar = Calendar.getInstance()
             calendar.time = date
             calendar.add(Calendar.DATE, position)
             date = calendar.time
-            val dayOfWeek = SimpleDateFormat("EEEE").format(date)
+            val dayOfWeek = SimpleDateFormat(DAY_OF_WEEK_EEEE_FORMAT).format(date)
 
             return dayOfWeek + ", " + DateFormat.format(DD_MMM_YYYY_DATE_FORMAT, date).toString()
         }

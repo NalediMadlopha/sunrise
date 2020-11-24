@@ -1,5 +1,6 @@
 package com.sunrise.app.ui.main
 
+import android.content.SharedPreferences
 import android.location.Address
 import android.os.Bundle
 import android.view.WindowManager
@@ -42,7 +43,12 @@ class MainActivity : AppCompatActivity(), Injectable, OnMapReadyCallback {
 
         search_view?.setOnQueryTextListener(onQueryTextListener)
 
-        forecast_recycler_view.addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+        forecast_recycler_view.addItemDecoration(
+            DividerItemDecoration(
+                this@MainActivity,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         val forecastAdapter = ForecastAdapter(emptyList())
         forecast_recycler_view.adapter = forecastAdapter
 
@@ -80,13 +86,23 @@ class MainActivity : AppCompatActivity(), Injectable, OnMapReadyCallback {
     private fun pinLocation(address: Address) {
         viewModel.fetchWeather(address.latitude, address.longitude)
         val latLng = LatLng(address.latitude, address.longitude)
+        val locationName = address.locality ?: address.adminArea ?: address.featureName
+
+        saveToSharedPreferences(locationName)
 
         googleMap.addMarker(
             MarkerOptions()
                 .position(latLng)
-                .title(address.locality)
+                .title(locationName)
         )
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_HEIGHT))
+    }
+
+    private fun saveToSharedPreferences(locationName: String?) {
+        val sharedPreferences = getSharedPreferences("SUNRISE_SHARED_PREFERENCES", MODE_PRIVATE)
+        val myEdit: SharedPreferences.Editor = sharedPreferences.edit()
+        myEdit.putString("location_name", locationName)
+        myEdit.apply()
     }
 
     private val onQueryTextListener = object : OnQueryTextListener, SearchView.OnQueryTextListener {
