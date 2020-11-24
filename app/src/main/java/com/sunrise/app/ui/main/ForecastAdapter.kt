@@ -1,11 +1,15 @@
 package com.sunrise.app.ui.main
 
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sunrise.app.R
 import com.sunrise.app.model.Forecast
@@ -92,25 +96,22 @@ class ForecastAdapter(private var forecastList: List<Forecast>) :
             }
         }
 
-        private fun getWeatherArt(weatherDescription: String): Drawable {
+        private fun getWeatherArt(weatherDescription: String): Drawable? {
             return when(weatherDescription) {
-                "Clear" -> {
-                    context.resources.getDrawable(R.mipmap.art_clear, null)
-                }
-                "Clouds" -> {
-                    context.resources.getDrawable(R.mipmap.art_clouds, null)
-                }
-                "Rain" -> {
-                    context.resources.getDrawable(R.mipmap.art_rain, null)
-                }
-                "Snow" -> {
-                    context.resources.getDrawable(R.mipmap.art_snow, null)
-                }
-                "Storm" -> {
-                    context.resources.getDrawable(R.mipmap.art_storm, null)
-                } else -> {
-                    context.resources.getDrawable(R.mipmap.art_clear, null)
-                }
+                "Clear" -> getDrawable(R.mipmap.art_clear)
+                "Clouds" -> getDrawable(R.mipmap.art_clouds)
+                "Rain" -> getDrawable(R.mipmap.art_rain)
+                "Snow" -> getDrawable(R.mipmap.art_snow)
+                "Storm" -> getDrawable(R.mipmap.art_storm)
+                else -> getDrawable(R.mipmap.art_clear)
+            }
+        }
+
+        private fun getDrawable(@DrawableRes id: Int): Drawable? {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ContextCompat.getDrawable(context, id)
+            } else {
+                ResourcesCompat.getDrawable(context.resources, id, null)
             }
         }
 
