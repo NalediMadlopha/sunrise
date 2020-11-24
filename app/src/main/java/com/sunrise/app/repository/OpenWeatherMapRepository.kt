@@ -5,6 +5,7 @@ import com.sunrise.app.database.WeatherMapDatabase
 import com.sunrise.app.model.WeatherMap
 import com.sunrise.app.service.OpenWeatherMapApi
 import retrofit2.Response
+
 import javax.inject.Inject
 
 class OpenWeatherMapRepository @Inject constructor(
@@ -14,14 +15,19 @@ class OpenWeatherMapRepository @Inject constructor(
 
     override fun fetchRemoteWeather(latitude: Double, longitude: Double,
                                     units: String, numberOfDays: Int): Response<WeatherMap> {
+        database.weatherMapDao().deleteAll()
         return service.fetchWeather(latitude, longitude, units, numberOfDays).execute()
+    }
+
+    override suspend fun saveWeather(weather: WeatherMap) {
+        database.weatherMapDao().insert(weather)
     }
 
     override suspend fun getWeather(id: Int): LiveData<WeatherMap> {
         return database.weatherMapDao().findById(id)
     }
 
-    override suspend fun getWeather(): LiveData<List<WeatherMap>> {
+    override fun getWeather(): LiveData<List<WeatherMap>> {
         return database.weatherMapDao().getAll()
     }
 

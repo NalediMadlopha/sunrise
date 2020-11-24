@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.WindowManager
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -16,26 +18,43 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.sunrise.app.R
+import com.sunrise.app.di.Injectable
+import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
 private const val ZOOM_HEIGHT = 11f
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+class MainActivity : AppCompatActivity(), Injectable, OnMapReadyCallback {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var googleMap: GoogleMap
-    private lateinit var viewModel: MainViewModel
+    private val viewModel: MainViewModel by viewModels{ viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         search_view?.setOnQueryTextListener(onQueryTextListener)
 
         forecast_recycler_view.addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
-        forecast_recycler_view.adapter = ForecastAdapter(emptyList())
+        val forecastAdapter = ForecastAdapter(emptyList())
+        forecast_recycler_view.adapter = forecastAdapter
+
+        viewModel.getWeather().observe(this, Observer { weatherMap ->
+            if (!weatherMap.isNullOrEmpty()) {
+                val forecastList = weatherMap.first().list
+
+                if (!forecastList.isNullOrEmpty()) {
+                    forecastAdapter.updateData(forecastList)
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -59,6 +78,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun pinLocation(address: Address) {
+        viewModel.fetchWeather(address.latitude, address.longitude)
         val latLng = LatLng(address.latitude, address.longitude)
 
         googleMap.addMarker(

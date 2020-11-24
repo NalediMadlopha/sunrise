@@ -11,7 +11,10 @@ import com.sunrise.app.model.WeatherMap
 abstract class WeatherMapDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(weatherMap: WeatherMap)
+    abstract fun insert(weather: WeatherMap)
+
+    @Query("DELETE FROM weather_map")
+    abstract fun deleteAll()
 
     @Query("SELECT * FROM weather_map")
     abstract fun getAll(): LiveData<List<WeatherMap>>

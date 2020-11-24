@@ -9,12 +9,14 @@ interface OpenWeatherMapRepositoryContract {
     fun fetchRemoteWeather(
         latitude: Double,
         longitude: Double,
-        units: String,
-        numberOfDays: Int
+        units: String = "metrics",
+        numberOfDays: Int = 7
     ): Response<WeatherMap>
+
+    suspend fun saveWeather(weather: WeatherMap)
 
     suspend fun getWeather(id: Int): LiveData<WeatherMap>
 
-    suspend fun getWeather(): LiveData<List<WeatherMap>>
+    fun getWeather(): LiveData<List<WeatherMap>>
 
 }
