@@ -6,6 +6,8 @@ import android.location.Geocoder
 import com.google.android.gms.maps.model.LatLng
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
+import com.sunrise.app.repository.OpenWeatherMapRepositoryContract
+import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -24,12 +26,14 @@ class MainViewModelTest {
     private lateinit var mockGeocoder: Geocoder
     @Mock
     private lateinit var mockAddress : Address
+    @Mock
+    private lateinit var mockRepository: OpenWeatherMapRepositoryContract
 
     @Before
     fun setUp() {
         initMocks(this)
 
-        viewModel = MainViewModel(mockApplication, mockGeocoder)
+        viewModel = MainViewModel(mockApplication, mockGeocoder, mockRepository, Dispatchers.Unconfined)
     }
 
     @Test

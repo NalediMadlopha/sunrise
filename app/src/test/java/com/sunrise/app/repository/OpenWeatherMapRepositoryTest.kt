@@ -48,15 +48,40 @@ class OpenWeatherMapRepositoryTest {
     }
 
     @Test
+    fun `fetchRemoteWeather should invoke the WeatherMapDao deleteAll`() {
+        val successResponse = Response.success(getWeatherMap())
+
+        `when`(mockDatabase.weatherMapDao()).thenReturn(mockWeatherMapDao)
+        `when`(mockService.fetchWeather(28.63, -26.36, "metric", 7)).thenReturn(mockWeatherMapResponseCall)
+        `when`(mockWeatherMapResponseCall.execute()).thenReturn(successResponse)
+
+        repository.fetchRemoteWeather(28.63, -26.36, "metric", 7)
+
+        verify(mockWeatherMapDao).deleteAll()
+    }
+
+    @Test
     fun `fetchRemoteWeather should invoke the fetchWeather service call`() {
         val successResponse = Response.success(getWeatherMap())
 
+        `when`(mockDatabase.weatherMapDao()).thenReturn(mockWeatherMapDao)
         `when`(mockService.fetchWeather(28.63, -26.36, "metric", 7)).thenReturn(mockWeatherMapResponseCall)
         `when`(mockWeatherMapResponseCall.execute()).thenReturn(successResponse)
 
         repository.fetchRemoteWeather(28.63, -26.36, "metric", 7)
 
         verify(mockService).fetchWeather(28.63, -26.36, "metric", 7)
+    }
+
+    @Test
+    fun `saveWeather invoke WeatherMapDao insert`() {
+        val weather = getWeatherMap()
+
+        `when`(mockDatabase.weatherMapDao()).thenReturn(mockWeatherMapDao)
+
+        runBlocking { repository.saveWeather(weather) }
+
+        verify(mockWeatherMapDao).insert(weather)
     }
 
     @Test

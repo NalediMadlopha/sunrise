@@ -1,15 +1,20 @@
 package com.sunrise.app.ui.main
 
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sunrise.app.R
 import com.sunrise.app.model.Forecast
+import kotlinx.android.synthetic.main.forecast_list_item.view.date_textview
+import kotlinx.android.synthetic.main.forecast_list_item.view.description_textview
+import kotlinx.android.synthetic.main.forecast_list_item.view.min_max_textview
 import kotlinx.android.synthetic.main.forecast_list_item_today.view.*
+import java.text.SimpleDateFormat
 import java.util.*
 
-class ForecastAdapter(private val forecastList: List<Forecast>) :
+class ForecastAdapter(private var forecastList: List<Forecast>) :
     RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastViewHolder {
@@ -45,14 +50,19 @@ class ForecastAdapter(private val forecastList: List<Forecast>) :
 
     override fun getItemCount() = forecastList.size
 
+    fun updateData(forecastList: List<Forecast>) {
+        this.forecastList = forecastList
+        notifyDataSetChanged()
+    }
+
     class ForecastViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val context = itemView.context
+        private val context = itemView.context
 
         fun bind(forecast: Forecast, position: Int) {
             if (position == 0) {
                 itemView.location_name_textview?.text = "Johannesburg"
-                itemView.date_textview?.text = "Today"
+                itemView.date_textview?.text = context.getString(R.string.today)
                 itemView.temperature_textview?.text =
                     context.getString(R.string.degrees, forecast.temp.day.toInt())
 
@@ -63,7 +73,7 @@ class ForecastAdapter(private val forecastList: List<Forecast>) :
                     forecast.feels_like.day.toInt()
                 )
             } else {
-                itemView.date_textview?.text = "Mon, 2${position + 1} November"
+                itemView.date_textview?.text = getForecastDate()
                 itemView.min_max_textview?.text = context.getString(
                     R.string.min_max,
                     forecast.temp.max.toInt(),
@@ -76,6 +86,20 @@ class ForecastAdapter(private val forecastList: List<Forecast>) :
                     .joinToString(" ") { it.capitalize(Locale.getDefault()) }
             }
         }
+
+        private val DD_MMM_YYYY_DATE_FORMAT = "dd MMMM yyyy"
+
+        private fun getForecastDate(): String {
+            var date = Date()
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+            calendar.add(Calendar.DATE, position)
+            date = calendar.time
+            val dayOfWeek = SimpleDateFormat("EEEE").format(date)
+
+            return dayOfWeek + ", " + DateFormat.format(DD_MMM_YYYY_DATE_FORMAT, date).toString()
+        }
+
     }
 
     object ViewType {
