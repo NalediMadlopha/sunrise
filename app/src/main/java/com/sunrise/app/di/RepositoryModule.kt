@@ -2,6 +2,7 @@ package com.sunrise.app.di
 
 import com.sunrise.app.database.WeatherMapDatabase
 import com.sunrise.app.repository.OpenWeatherMapRepository
+import com.sunrise.app.repository.OpenWeatherMapRepositoryContract
 import com.sunrise.app.service.OpenWeatherMapApi
 import dagger.Module
 import dagger.Provides
@@ -14,7 +15,7 @@ class RepositoryModule {
     @Provides
     fun provideOpenWeatherMapRepository(
         database: WeatherMapDatabase, service: OpenWeatherMapApi
-    ): OpenWeatherMapRepository {
+    ): OpenWeatherMapRepositoryContract {
         return OpenWeatherMapRepository(database, service)
     }
 
