@@ -32,20 +32,12 @@
 
     </RelativeLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/forecast_swipe_refresh_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/forecast_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/forecast_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="1"
-            tools:listitem="@layout/forecast_list_item_today" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="1"
+        tools:listitem="@layout/forecast_list_item_today" />
 
 </LinearLayout>
