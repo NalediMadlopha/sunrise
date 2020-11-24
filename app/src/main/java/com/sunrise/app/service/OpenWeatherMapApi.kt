@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface OpenWeatherMapApi {
 
     @GET("/data/2.5/forecast/daily")
-    fun fetchDailyWeatherMap(
+    fun fetchWeather(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
         @Query("units") units: String,

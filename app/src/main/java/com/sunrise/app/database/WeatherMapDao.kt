@@ -17,6 +17,6 @@ abstract class WeatherMapDao {
     abstract fun getAll(): LiveData<List<WeatherMap>>
 
     @Query("SELECT * FROM weather_map WHERE id=:id")
-    abstract fun findById(id: String): LiveData<WeatherMap>
+    abstract fun findById(id: Int): LiveData<WeatherMap>
 
 }

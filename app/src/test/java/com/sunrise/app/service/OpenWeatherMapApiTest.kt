@@ -12,12 +12,9 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-@RunWith(JUnit4::class)
 class OpenWeatherMapApiTest {
 
     private lateinit var service: OpenWeatherMapApi
@@ -43,31 +40,31 @@ class OpenWeatherMapApiTest {
     }
 
     @Test
-    fun `fetchDailyWeatherMap should hit the daily endpoint`() {
+    fun `fetchWeather should hit the daily endpoint`() {
         val expectedEndPoint =
             "/data/2.5/forecast/daily?lat=28.63&lon=-26.36&units=metric&cnt=7&appid=${BuildConfig.OPEN_WEATHER_MAP_API_KEY}"
         enqueueResponse("error.json")
 
-        service.fetchDailyWeatherMap(28.63, -26.36, "metric", 7).execute()
+        service.fetchWeather(28.63, -26.36, "metric", 7).execute()
 
         assertEquals(expectedEndPoint, mockWebServer.takeRequest().path)
     }
 
     @Test
-    fun `fetchDailyWeatherMap should return a null forecast list if the service returns an error response`() {
+    fun `fetchWeather should return a null forecast list if the service returns an error response`() {
         enqueueResponse("error.json")
 
-        val response = service.fetchDailyWeatherMap(any(), any(), any(), any()).execute()
+        val response = service.fetchWeather(any(), any(), any(), any()).execute()
         mockWebServer.takeRequest()
 
         assertTrue(response.body()?.list.isNullOrEmpty())
     }
 
     @Test
-    fun `fetchDailyWeatherMap should return a list of daily forecast if the response is successful`() {
+    fun `fetchWeather should return a list of daily forecast if the response is successful`() {
         enqueueResponse("forecast.json")
 
-        val response = service.fetchDailyWeatherMap(28.63, -26.36, "metric", 7).execute()
+        val response = service.fetchWeather(28.63, -26.36, "metric", 7).execute()
         mockWebServer.takeRequest()
 
         assertTrue(response.isSuccessful)
